@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: django-deployment
 spec:
-  replicas: 2
+  replicas: 2  # Initial number of replicas
   selector:
     matchLabels:
       app: django
@@ -13,7 +13,14 @@ spec:
         app: django
     spec:
       containers:
-        - name: django
-          image: django-app:latest
+        - name: django-container
+          image: your-django-image:latest
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

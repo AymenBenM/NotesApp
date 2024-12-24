@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: django-service
 spec:
+  type: LoadBalancer  # Ensures external load balancing
   selector:
     app: django
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8000
-  type: LoadBalancer

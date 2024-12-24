@@ -9,22 +9,25 @@
           - python3-venv
           - python3-pip
         state: present
+        update_cache: yes
 
     - name: Create a virtual environment
       command:
-        cmd: python3 -m venv /mnt/x/notesapp/venv  # Ensure a full path to the virtual environment
-        creates: /venv/bin/activate  # Ensure it points to the correct location
+        cmd: python3 -m venv /mnt/x/notesapp/venv  # Full path to the virtual environment
+        creates: /mnt/x/notesapp/venv/bin/activate  # Updated to match Linux virtualenv structure
 
     - name: Install Python packages in venv from requirements.txt
       pip:
         requirements: /mnt/x/notesapp/requirements.txt
-        executable: /home/ubuntu/pip
-      when: ansible_facts['distribution'] == "Ubuntu"  # Ensure it's an Ubuntu machine or modify for your OS
+        virtualenv: /mnt/x/notesapp/venv
+        virtualenv_python: python3
+      when: ansible_facts['distribution'] == "Ubuntu"  # Ensure the task runs only on Ubuntu
 
     - name: Install additional dependencies in virtual environment
       pip:
         name: "{{ item }}"
-        executable: /mnt/x/notesapp/venv/Lib/site-packages/pip
+        virtualenv: /mnt/x/notesapp/venv
+        virtualenv_python: python3
       loop:
         - requests
         - numpy
