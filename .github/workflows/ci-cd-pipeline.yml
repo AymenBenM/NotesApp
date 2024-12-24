@@ -1,13 +1,13 @@
 name: CI/CD Pipeline
 
-# Trigger the workflow on push to the main branch and on pull requests
+# Trigger the workflow on push to the master branch and on pull requests to the master branch
 on:
   push:
     branches:
-      - main
+      - master  # Trigger on push to master branch
   pull_request:
     branches:
-      - main
+      - master  # Trigger on pull request to master branch
 
 jobs:
   build:
@@ -32,18 +32,16 @@ jobs:
           pip install --upgrade pip  # Upgrade pip
           pip install -r requirements.txt  # Install dependencies from requirements.txt
 
-      # Step 4: Stage, commit, and push changes to GitHub
+      # Step 4: Stage, commit, and push changes to GitHub (only if changes exist)
       - name: Commit and Push changes
         run: |
           git config --global user.name "aymen"  # Set the username for commit
           git config --global user.email "aymen.benmaryem.bm@gmail.com"  # Set the email for commit
           git add .  # Stage all changes
-          git commit -m "Automated commit message" || echo "No changes to commit"  # Commit changes (if any)
-          git push origin main  # Push to the main branch of the repository
+          git diff-index --quiet HEAD || (git commit -m "Automated commit message" && git push origin master)  # Commit and push only if there are changes
 
       # Step 5: Run tests using pytest
       - name: Run tests
         run: |
           source venv/bin/activate  # Activate the virtual environment
           pytest  # Run tests with pytest (use 'python manage.py test' for Django tests)
-
