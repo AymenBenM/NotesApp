@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+# Trigger the workflow on push to the main branch and on pull requests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Specify the OS where the job will run
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2  # Checkout the repository code
+
+      # Step 2: Set up Python environment
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'  # Use the appropriate Python version
+
+      # Step 3: Install dependencies in the virtual environment
+      - name: Install dependencies
+        run: |
+          python -m venv venv  # Create a virtual environment
+          source venv/bin/activate  # Activate the virtual environment
+          pip install --upgrade pip  # Upgrade pip
+          pip install -r requirements.txt  # Install dependencies from requirements.txt
+
+      # Step 4: Stage, commit, and push changes to GitHub
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name "aymen"  # Set the username for commit
+          git config --global user.email "aymen.benmaryem.bm@gmail.com"  # Set the email for commit
+          git add .  # Stage all changes
+          git commit -m "Automated commit message" || echo "No changes to commit"  # Commit changes (if any)
+          git push origin main  # Push to the main branch of the repository
+
+      # Step 5: Run tests using pytest
+      - name: Run tests
+        run: |
+          source venv/bin/activate  # Activate the virtual environment
+          pytest  # Run tests with pytest (use 'python manage.py test' for Django tests)
+
+
