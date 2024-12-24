@@ -1,0 +1,30 @@
+- name: Set up Django project in virtual environment
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install Python3 and venv package
+      apt:
+        name:
+          - python3
+          - python3-venv
+          - python3-pip
+        state: present
+
+    - name: Create a virtual environment
+      command:
+        cmd: python3 -m venv /mnt/x/notesapp/venv  # Ensure a full path to the virtual environment
+        creates: /venv/bin/activate  # Ensure it points to the correct location
+
+    - name: Install Python packages in venv from requirements.txt
+      pip:
+        requirements: /mnt/x/notesapp/requirements.txt
+        executable: /home/ubuntu/pip
+      when: ansible_facts['distribution'] == "Ubuntu"  # Ensure it's an Ubuntu machine or modify for your OS
+
+    - name: Install additional dependencies in virtual environment
+      pip:
+        name: "{{ item }}"
+        executable: /mnt/x/notesapp/venv/Lib/site-packages/pip
+      loop:
+        - requests
+        - numpy
