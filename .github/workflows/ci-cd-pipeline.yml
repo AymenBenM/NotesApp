@@ -47,8 +47,3 @@ jobs:
           source venv/bin/activate  # Activate the virtual environment
           pytest  # Run tests with pytest (use 'python manage.py test' for Django tests)
 
-      # Step 6: Optional Deployment (e.g., to AWS, Heroku, etc.)
-      - name: Deploy Application
-        run: |
-          echo "Deploying the application..."  # Replace this with actual deployment commands
-          # Add deployment commands for AWS, Heroku, etc.
